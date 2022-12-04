@@ -27,16 +27,36 @@ with open(csvpoll, encoding="utf") as csvfile:
 cumul_votecount = int(len(candidate_list))
 unique_candidate_list = list(set(candidate_list))
 
-print(cumul_votecount)
+# Display results on screen
+print("\nElection Results")
+print("-----------------------------")
+print(f"Total Votes: ", cumul_votecount)
+print("-----------------------------")
 
 for candidate in unique_candidate_list:
     counter =  candidate_list.count(candidate)
-    pct_vote = counter / cumul_votecount
-    print(candidate, counter, pct_vote)
+    pct_vote = f"{counter / cumul_votecount:.3%}"
+    print(f"{candidate} : {pct_vote} ({counter})")
     if counter > winner_num_votes:
         winner_num_votes = counter
         winner_name = candidate
 
-print(winner_name)
+print("-----------------------------")
+print(f"Winner: ", winner_name)
+print("-----------------------------\n")
 
+# Build list to write to output file
+output_to_file = [
+    "Total Votes", cumul_votecount,
+    "Winner", winner_name,
+]
 
+# Create path to output file
+outputfile = os.path.join("analysis", "output.csv")
+
+# Write data to file output.csv
+with open(outputfile, "w") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(output_to_file)
+
+csvfile.close()
